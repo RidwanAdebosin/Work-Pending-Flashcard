@@ -99,25 +99,16 @@ div.isDone {
 .card-features {
   display: flex;
   justify-content: space-between;
-  position: relative;
-  right: 0px;
-  bottom: -50px;
+  margin-block-start: 30px;
 }
 .pencil-fill {
   border: none;
   background: transparent;
   cursor: pointer;
-  margin-inline-end: 2rem;
 }
 
 .trash-fill {
   border: none;
   background: transparent;
   cursor: pointer;
-}
-.pencil-fill:hover,
-.trash-fill:hover {
-  background-color: #5a3e2b;
-  padding: 0.2rem;
-  border-radius: 50%;
 }
