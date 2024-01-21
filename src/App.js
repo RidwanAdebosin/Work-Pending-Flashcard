@@ -10,11 +10,22 @@ const pendingJobs = [
 ];
 
 export default function App() {
+  const [pending, setPending] = useState("");
+  const [newPendings, setNewPendings] = useState([]);
+
+  function handleAddPendings(newPending) {
+    setNewPendings((newPendings) => [...newPendings, newPending]);
+  }
   return (
     <div className="app">
       <Logo />
-      <TextArea />
-      <PendingJobList />
+      <TextArea
+        pending={pending}
+        onPending={setPending}
+        setNewPendings={setNewPendings}
+        onAddPendings={handleAddPendings}
+      />
+      <PendingJobList newPendings={newPendings} />
       <Stats />
     </div>
   );
@@ -24,17 +35,32 @@ function Logo() {
   return <h2>🧬Medical Pending FlashCards🦠</h2>;
 }
 
-function TextArea() {
+function TextArea({ pending, onPending, onAddPendings }) {
+  function handleSubmit(e) {
+    e.preventDefault();
+    if (!pending) return;
+
+    const newPending = { pending, sorted: false, id: Date.now() };
+    onAddPendings(newPending);
+
+    onPending("");
+  }
+
   return (
-    <form className="add-form">
+    <form className="add-form" onSubmit={handleSubmit}>
       <h3>Write your pending work here</h3>
-      <textarea placeholder="typing....." />
+      <textarea
+        placeholder="typing....."
+        value={pending}
+        onChange={(e) => onPending(e.target.value)}
+      />
+
       <button>Add</button>
     </form>
   );
 }
 
-function PendingJobList() {
+function PendingJobList({ newPendings }) {
   const [isDoneId, setIsDoneId] = useState(null);
 
   function handlePendingJobDone(id) {
@@ -43,11 +69,12 @@ function PendingJobList() {
 
   return (
     <div className="flashcards">
-      {pendingJobs.map((pendingJob) => (
+      {newPendings.map((pendingJob) => (
         <div
           key={pendingJob.id}
           onDoubleClick={() => handlePendingJobDone(pendingJob.id)}
           className={pendingJob.id === isDoneId ? "isDone" : ""}
+          value={newPendings}
         >
           <p>
             {pendingJob.id === isDoneId
