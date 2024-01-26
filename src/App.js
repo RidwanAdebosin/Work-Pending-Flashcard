@@ -1,31 +1,62 @@
-import { useState } from "react";
+// import { useState } from "react";
+import React from "react";
+import { FaRegTrashAlt } from "react-icons/fa";
+import { FaPencilAlt } from "react-icons/fa";
+
+// import
 
 const pendingJobs = [
-  { id: 1, description: "Passports", quantity: 2, sorted: "Pending Sorted" },
-  { id: 2, description: "Socks", quantity: 12, sorted: "Pending Sorted" },
-  { id: 3, description: "Passports", quantity: 2, sorted: "Pending Sorted" },
-  { id: 4, description: "Socks", quantity: 12, sorted: "Pending Sorted" },
-  { id: 5, description: "Passports", quantity: 2, sorted: "Pending Sorted" },
-  { id: 6, description: "Socks", quantity: 12, sorted: "Pending Sorted" },
+  {
+    id: 1,
+    description:
+      " It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passage",
+    quantity: 2,
+    sorted: "Pending Sorted",
+  },
+  {
+    id: 2,
+    description:
+      " It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passage",
+    quantity: 12,
+    sorted: "Pending Sorted",
+  },
+  {
+    id: 3,
+    description:
+      " It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passage",
+    quantity: 2,
+    sorted: "Pending Sorted",
+  },
+  {
+    id: 4,
+    description:
+      " It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passage",
+    quantity: 12,
+    sorted: "Pending Sorted",
+  },
+  {
+    id: 5,
+    description:
+      " It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passage",
+    quantity: 2,
+    sorted: "Pending Sorted",
+  },
+  {
+    id: 6,
+    description:
+      " It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passage",
+    quantity: 12,
+    sorted: "Pending Sorted",
+  },
 ];
+// const pendingJobs = [{ pending: "", id: Date.now() }];
 
 export default function App() {
-  const [pending, setPending] = useState("");
-  const [newPendings, setNewPendings] = useState([]);
-
-  function handleAddPendings(newPending) {
-    setNewPendings((newPendings) => [...newPendings, newPending]);
-  }
   return (
     <div className="app">
       <Logo />
-      <TextArea
-        pending={pending}
-        onPending={setPending}
-        setNewPendings={setNewPendings}
-        onAddPendings={handleAddPendings}
-      />
-      <PendingJobList newPendings={newPendings} />
+      <TextArea />
+      <PendingJobList />
       <Stats />
     </div>
   );
@@ -35,78 +66,34 @@ function Logo() {
   return <h2>🧬Medical Pending FlashCards🦠</h2>;
 }
 
-function TextArea({ pending, onPending, onAddPendings }) {
-  function handleSubmit(e) {
-    e.preventDefault();
-    if (!pending) return;
-
-    const newPending = { pending, sorted: false, id: Date.now() };
-    onAddPendings(newPending);
-
-    onPending("");
-  }
-
+function TextArea() {
   return (
-    <form className="add-form" onSubmit={handleSubmit}>
+    <form className="add-form">
       <h3>Write your pending work here</h3>
-      <textarea
-        placeholder="typing....."
-        value={pending}
-        onChange={(e) => onPending(e.target.value)}
-      />
+      <textarea placeholder="typing....." />
 
-      <button>Add</button>
+      <button type="submit" className="submit-btn">
+        Add
+      </button>
     </form>
   );
 }
 
-function PendingJobList({ newPendings }) {
-  const [isDoneId, setIsDoneId] = useState(null);
-
-  function handlePendingJobDone(id) {
-    setIsDoneId(id !== isDoneId ? id : null);
-  }
-
+function PendingJobList() {
   return (
     <div className="flashcards">
-      {newPendings.map((pendingJob) => (
-        <div
-          key={pendingJob.id}
-          onDoubleClick={() => handlePendingJobDone(pendingJob.id)}
-          className={pendingJob.id === isDoneId ? "isDone" : ""}
-          value={newPendings}
-        >
-          <p>
-            {pendingJob.id === isDoneId
-              ? pendingJob.sorted
-              : pendingJob.description}
-            <span className="card-features">
-              <span className="pencil-fill">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  className="pencil-fill"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.5.5 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11z" />
-                </svg>
-              </span>
-              <span className="trash-fill">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  className="trash-fill"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0" />
-                </svg>
-              </span>
-            </span>
-          </p>
+      {pendingJobs.map((pendingJob) => (
+        <div key={pendingJob.id} className="flashcard">
+          <p>{pendingJob.description}</p>
+          <span className="flashcard-extras">
+            <button className="trash-btn">
+              <FaRegTrashAlt />
+            </button>
+
+            <button className="edit-btn">
+              <FaPencilAlt />
+            </button>
+          </span>
         </div>
       ))}
     </div>
