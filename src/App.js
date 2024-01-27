@@ -1,62 +1,21 @@
 // import { useState } from "react";
-import React from "react";
+import React, { useState } from "react";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { FaPencilAlt } from "react-icons/fa";
 
-// import
-
-const pendingJobs = [
-  {
-    id: 1,
-    description:
-      " It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passage",
-    quantity: 2,
-    sorted: "Pending Sorted",
-  },
-  {
-    id: 2,
-    description:
-      " It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passage",
-    quantity: 12,
-    sorted: "Pending Sorted",
-  },
-  {
-    id: 3,
-    description:
-      " It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passage",
-    quantity: 2,
-    sorted: "Pending Sorted",
-  },
-  {
-    id: 4,
-    description:
-      " It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passage",
-    quantity: 12,
-    sorted: "Pending Sorted",
-  },
-  {
-    id: 5,
-    description:
-      " It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passage",
-    quantity: 2,
-    sorted: "Pending Sorted",
-  },
-  {
-    id: 6,
-    description:
-      " It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passage",
-    quantity: 12,
-    sorted: "Pending Sorted",
-  },
-];
-// const pendingJobs = [{ pending: "", id: Date.now() }];
-
 export default function App() {
+  const [pendingFlashCards, setPendingFlashCards] = useState([]);
+  function handleAddPendings(pendingFlashCard) {
+    setPendingFlashCards((pendingFlashCards) => [
+      ...pendingFlashCards,
+      pendingFlashCard,
+    ]);
+  }
   return (
     <div className="app">
       <Logo />
-      <TextArea />
-      <PendingJobList />
+      <Form onAddPendings={handleAddPendings} />
+      <PendingJobList pendingFlashCards={pendingFlashCards} />
       <Stats />
     </div>
   );
@@ -66,25 +25,44 @@ function Logo() {
   return <h2>🧬Medical Pending FlashCards🦠</h2>;
 }
 
-function TextArea() {
-  return (
-    <form className="add-form">
-      <h3>Write your pending work here</h3>
-      <textarea placeholder="typing....." />
+function Form({ onAddPendings }) {
+  const [pendingContent, setPendingContent] = useState("");
 
-      <button type="submit" className="submit-btn">
+  function handleSubmit(e) {
+    e.preventDefault();
+
+    if (!pendingContent) return;
+
+    const newPending = { pendingContent, sorted: false, id: Date.now() };
+
+    onAddPendings(newPending);
+    setPendingContent("");
+  }
+  return (
+    <form className="add-form" onSubmit={handleSubmit}>
+      <h3>Write your pending work here</h3>
+      <textarea
+        placeholder="typing....."
+        value={pendingContent}
+        onChange={(e) => setPendingContent(e.target.value)}
+      />
+
+      <button
+        // type="submit"
+        className="submit-btn"
+      >
         Add
       </button>
     </form>
   );
 }
 
-function PendingJobList() {
+function PendingJobList({ pendingFlashCards }) {
   return (
     <div className="flashcards">
-      {pendingJobs.map((pendingJob) => (
+      {pendingFlashCards.map((pendingJob) => (
         <div key={pendingJob.id} className="flashcard">
-          <p>{pendingJob.description}</p>
+          <p>{newPending.pendingContent}</p>
           <span className="flashcard-extras">
             <button className="trash-btn">
               <FaRegTrashAlt />
