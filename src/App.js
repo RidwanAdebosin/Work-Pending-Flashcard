@@ -5,17 +5,43 @@ import { FaPencilAlt } from "react-icons/fa";
 
 export default function App() {
   const [pendingFlashCards, setPendingFlashCards] = useState([]);
+  const [isEditing, setIsEditing] = useState(null);
+
   function handleAddPendings(pendingFlashCard) {
     setPendingFlashCards((pendingFlashCards) => [
       ...pendingFlashCards,
       pendingFlashCard,
     ]);
   }
+  function handleDeletePending(id) {
+    setPendingFlashCards((pendingFlashCards) =>
+      pendingFlashCards.filter((pendingJob) => pendingJob.id !== id)
+    );
+  }
+
+  // function handleEditPendingJob(id) {
+  //   const updatedPendings = pendingFlashCards.map((pending) =>
+  //     pending.id === pendingJob.id
+  //       ? { ...pending, pendingContent: e.target.value }
+  //       : pending
+  //   );
+  //   setPendingFlashCards(updatedPendings);
+
+  //   setIsEditing((id = isEditing ? null : id));
+  // }
+
   return (
     <div className="app">
       <Logo />
       <Form onAddPendings={handleAddPendings} />
-      <PendingJobList pendingFlashCards={pendingFlashCards} />
+      <PendingJobList
+        setPendingFlashCards={setPendingFlashCards}
+        pendingFlashCards={pendingFlashCards}
+        onDeletePendingJob={handleDeletePending}
+        // onEditPendingJob={handleEditPendingJob}
+        isEditing={isEditing}
+        setIsEditing={setIsEditing}
+      />
       <Stats />
     </div>
   );
@@ -36,44 +62,63 @@ function Form({ onAddPendings }) {
     const newPending = { pendingContent, sorted: false, id: Date.now() };
 
     onAddPendings(newPending);
+
     setPendingContent("");
   }
   return (
     <form className="add-form" onSubmit={handleSubmit}>
       <h3>Write your pending work here</h3>
       <textarea
-        placeholder="typing....."
+        placeholder="write your pending jobs here for your colleague to see....."
         value={pendingContent}
         onChange={(e) => setPendingContent(e.target.value)}
       />
 
-      <button
-        // type="submit"
-        className="submit-btn"
-      >
+      <button type="submit" className="submit-btn">
         Add
       </button>
     </form>
   );
 }
 
-function PendingJobList({ pendingFlashCards }) {
+function PendingJobList({
+  pendingFlashCards,
+  onDeletePendingJob,
+  onEditPendingJob,
+}) {
   return (
     <div className="flashcards">
       {pendingFlashCards.map((pendingJob) => (
-        <div key={pendingJob.id} className="flashcard">
-          <p>{newPending.pendingContent}</p>
-          <span className="flashcard-extras">
-            <button className="trash-btn">
-              <FaRegTrashAlt />
-            </button>
-
-            <button className="edit-btn">
-              <FaPencilAlt />
-            </button>
-          </span>
-        </div>
+        <Pendings
+          pendingJob={pendingJob}
+          key={pendingJob.id}
+          onDeletePendingJob={onDeletePendingJob}
+          onEditPendingJob={onEditPendingJob}
+        />
       ))}
+    </div>
+  );
+}
+
+function Pendings({ pendingJob, onDeletePendingJob, onEditPendingJob }) {
+  return (
+    <div className="flashcard">
+      {pendingJob.pendingContent}
+
+      <span className="flashcard-extras">
+        <button
+          className="trash-btn"
+          onClick={() => onDeletePendingJob(pendingJob.id)}
+        >
+          <FaRegTrashAlt />
+        </button>
+        <button
+          className="edit-btn"
+          onClick={() => onEditPendingJob(pendingJob.id)}
+        >
+          <FaPencilAlt />
+        </button>
+      </span>
     </div>
   );
 }
