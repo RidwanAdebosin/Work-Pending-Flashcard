@@ -59,7 +59,7 @@ function Form({ onAddPendings }) {
 
     if (!pendingContent) return;
 
-    const newPending = { pendingContent, sorted: false, id: Date.now() };
+    const newPending = { pendingContent, sorted: true, id: Date.now() };
 
     onAddPendings(newPending);
 
@@ -101,25 +101,40 @@ function PendingJobList({
 }
 
 function Pendings({ pendingJob, onDeletePendingJob, onEditPendingJob }) {
-  return (
-    <div className="flashcard">
-      {pendingJob.pendingContent}
+  const [sortedId, setSortedId] = useState(null);
 
-      <span className="flashcard-extras">
-        <button
-          className="trash-btn"
-          onClick={() => onDeletePendingJob(pendingJob.id)}
-        >
-          <FaRegTrashAlt />
-        </button>
-        <button
-          className="edit-btn"
-          onClick={() => onEditPendingJob(pendingJob.id)}
-        >
-          <FaPencilAlt />
-        </button>
-      </span>
-    </div>
+  function handleSorted(id) {
+    setSortedId(id !== sortedId ? id : null);
+  }
+
+  return (
+    <main className="flashcard">
+      <div
+        key={pendingJob.id}
+        onClick={() => handleSorted(pendingJob.id)}
+        className={pendingJob.id === sortedId ? "sorted" : ""}
+      >
+        {/* {pendingJob.pendingContent} */}
+
+        {pendingJob.id === sortedId
+          ? pendingJob.sorted
+          : pendingJob.pendingContent}
+        <span className="flashcard-extras">
+          <button
+            className="trash-btn"
+            onClick={() => onDeletePendingJob(pendingJob.id)}
+          >
+            <FaRegTrashAlt />
+          </button>
+          <button
+            className="edit-btn"
+            onClick={() => onEditPendingJob(pendingJob.id)}
+          >
+            <FaPencilAlt />
+          </button>
+        </span>
+      </div>
+    </main>
   );
 }
 

@@ -78,7 +78,7 @@ textarea {
   padding: 3.2rem 0;
 }
 
-div.isDone {
+main.sorted {
   border: 1px solid green;
   background-color: green;
   color: #fff;
