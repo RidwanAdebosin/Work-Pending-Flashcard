@@ -78,19 +78,19 @@ textarea {
   padding: 3.2rem 0;
 }
 
-main.sorted {
-  border: 1px solid green;
-  background-color: green;
-  color: #fff;
-  font-weight: bold;
-}
-
 /* STYLING THE FLASHCARDS */
 .flashcards {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 10px;
   margin-block-start: 1rem;
+}
+
+.sorted {
+  border: 1px solid green;
+  background: green;
+  color: #ed0f0f;
+  font-weight: bold;
 }
 
 .flashcards div {

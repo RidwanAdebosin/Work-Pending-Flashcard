@@ -19,6 +19,15 @@ export default function App() {
     );
   }
 
+  function handleToggleItem(id) {
+    setPendingFlashCards((pendingFlashCards) =>
+      pendingFlashCards.map((pendingJob) =>
+        pendingJob.id === id
+          ? { ...pendingJob, sortedStatus: !pendingJob.sortedStatus }
+          : pendingJob
+      )
+    );
+  }
   // function handleEditPendingJob(id) {
   //   const updatedPendings = pendingFlashCards.map((pending) =>
   //     pending.id === pendingJob.id
@@ -41,6 +50,7 @@ export default function App() {
         // onEditPendingJob={handleEditPendingJob}
         isEditing={isEditing}
         setIsEditing={setIsEditing}
+        onToggleItems={handleToggleItem}
       />
       <Stats />
     </div>
@@ -59,7 +69,11 @@ function Form({ onAddPendings }) {
 
     if (!pendingContent) return;
 
-    const newPending = { pendingContent, sorted: true, id: Date.now() };
+    const newPending = {
+      pendingContent,
+      sortedStatus: "Pending Sorted",
+      id: Date.now(),
+    };
 
     onAddPendings(newPending);
 
@@ -85,6 +99,7 @@ function PendingJobList({
   pendingFlashCards,
   onDeletePendingJob,
   onEditPendingJob,
+  onToggleItems,
 }) {
   return (
     <div className="flashcards">
@@ -94,13 +109,19 @@ function PendingJobList({
           key={pendingJob.id}
           onDeletePendingJob={onDeletePendingJob}
           onEditPendingJob={onEditPendingJob}
+          onToggleItems={onToggleItems}
         />
       ))}
     </div>
   );
 }
 
-function Pendings({ pendingJob, onDeletePendingJob, onEditPendingJob }) {
+function Pendings({
+  pendingJob,
+  onDeletePendingJob,
+  onEditPendingJob,
+  onToggleItems,
+}) {
   const [sortedId, setSortedId] = useState(null);
 
   function handleSorted(id) {
@@ -108,33 +129,34 @@ function Pendings({ pendingJob, onDeletePendingJob, onEditPendingJob }) {
   }
 
   return (
-    <main className="flashcard">
+    <article className="flashcard">
       <div
         key={pendingJob.id}
         onClick={() => handleSorted(pendingJob.id)}
-        className={pendingJob.id === sortedId ? "sorted" : ""}
+        style={pendingJob.id === sortedId ? { backgroundColor: "green" } : {}}
       >
-        {/* {pendingJob.pendingContent} */}
+        <p>
+          {pendingJob.id === sortedId
+            ? pendingJob.sortedStatus
+            : pendingJob.pendingContent}
 
-        {pendingJob.id === sortedId
-          ? pendingJob.sorted
-          : pendingJob.pendingContent}
-        <span className="flashcard-extras">
-          <button
-            className="trash-btn"
-            onClick={() => onDeletePendingJob(pendingJob.id)}
-          >
-            <FaRegTrashAlt />
-          </button>
-          <button
-            className="edit-btn"
-            onClick={() => onEditPendingJob(pendingJob.id)}
-          >
-            <FaPencilAlt />
-          </button>
-        </span>
+          <span className="flashcard-extras">
+            <button
+              className="trash-btn"
+              onClick={() => onDeletePendingJob(pendingJob.id)}
+            >
+              <FaRegTrashAlt />
+            </button>
+            <button
+              className="edit-btn"
+              onChange={() => onEditPendingJob(pendingJob.id)}
+            >
+              <FaPencilAlt />
+            </button>
+          </span>
+        </p>
       </div>
-    </main>
+    </article>
   );
 }
 
