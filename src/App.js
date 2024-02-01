@@ -52,7 +52,7 @@ export default function App() {
         setIsEditing={setIsEditing}
         onToggleItems={handleToggleItem}
       />
-      <Stats />
+      <Stats pendingFlashCards={pendingFlashCards} />
     </div>
   );
 }
@@ -116,13 +116,8 @@ function PendingJobList({
   );
 }
 
-function Pendings({
-  pendingJob,
-  onDeletePendingJob,
-  onEditPendingJob,
-  onToggleItems,
-}) {
-  const [sortedId, setSortedId] = useState(null);
+function Pendings({ pendingJob, onDeletePendingJob, onEditPendingJob }) {
+  const [sortedId, setSortedId] = useState(false);
 
   function handleSorted(id) {
     setSortedId(id !== sortedId ? id : null);
@@ -149,7 +144,7 @@ function Pendings({
             </button>
             <button
               className="edit-btn"
-              onChange={() => onEditPendingJob(pendingJob.id)}
+              onClick={() => onEditPendingJob(pendingJob.id)}
             >
               <FaPencilAlt />
             </button>
@@ -160,11 +155,20 @@ function Pendings({
   );
 }
 
-function Stats() {
+function Stats({ pendingFlashCards }) {
+  const numPendingFlashCards = pendingFlashCards.length;
+  const numSortedPendingFlashCards = pendingFlashCards.filter(
+    (pendingJob) => pendingJob.sortedStatus
+  ).length;
+  const percentage = Math.round(
+    (numSortedPendingFlashCards / numPendingFlashCards) * 100
+  );
+
   return (
     <footer className="stats">
       <em>
-        You have X pendings on your handover log, and you've sorted X (X%)
+        You have {numPendingFlashCards} pendings on your handover log, and
+        you've sorted {numSortedPendingFlashCards} ({percentage}%).
       </em>
     </footer>
   );
